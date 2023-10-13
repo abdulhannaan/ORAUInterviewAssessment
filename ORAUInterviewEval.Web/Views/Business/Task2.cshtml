@@ -1,0 +1,82 @@
+﻿@using ORAUInterviewEval.Core.Interfaces
+@model ORAUInterviewEval.Infrastructure.ViewModels.Task2ViewModel
+
+@inject ICacheService cacheService
+
+@{
+    ViewData["Title"] = "Task 2 - Hide/Show Section";
+
+
+    var programOptions = new SelectList(cacheService.GetPrograms(), "Key", "Value");
+}
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2 mb-5">
+            <h1 class="border-bottom">@ViewData["Title"]</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h2>Requirements</h2>
+                    <p>
+                        Please show Other field only when "Other Program" is selected and hide otherwise.
+                    </p>
+                    <ul>
+                        <li>Other field should only show when "Other Program" is selected</li>
+                        <li>Other field should be required when "Other Program" is selected</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Task2" asp-controller="Business" method="post">
+                        <div class="form-group">
+                            <label asp-for="ProgramId" class="form-label"></label>
+                            <select asp-for="ProgramId" asp-items="programOptions" class="form-control" aria-required="true"></select>
+                            <span asp-validation-for="ProgramId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" id="Other">
+                            <label asp-for="Other" class="form-label"></label>
+                            <input asp-for="Other" class="form-control" aria-required="true" />
+                            <span asp-validation-for="Other" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <button type="submit" class="btn-primary btn btn btn-block my-2">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            checkSelectedProgram();
+            $('#ProgramId').change(function () {
+                checkSelectedProgram();
+            });
+        });
+
+        function checkSelectedProgram() {
+            // Get the selected value of the 'ProgramId' element
+            var value = $("#ProgramId").val();
+            // If true, hide the element with id 'Other' & If false, show the element with id 'Other'
+            value == '99' ? $('#Other').show() : $('#Other').hide(); //Other program value is 99 we can fetch by text too.
+        }
+
+
+    </script>
+}

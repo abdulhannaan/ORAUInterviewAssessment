@@ -1,0 +1,77 @@
+﻿@{
+	ViewData["Title"] = "Task 6 - Improve Page Load Performance";
+}
+
+
+<div class="container">
+
+
+	<div class="row">
+		<div class="col-lg-8 offset-lg-2 mb-5">
+			<h1 class="border-bottom">@ViewData["Title"]</h1>
+			<div class="card">
+				<div class="card-body">
+					<h2>Requirements</h2>
+					<p>
+						This page has been running slowly in production. See if there's anything you can do to improve performance.
+					</p>
+					<div class="alert alert-warning">
+						NOTE: Since an in-memory database is used, no perforamce issues are noticable. However imagine this was a SQL database running on a remote server with even more data and apply any performance tweaks you can think of to improve performance.
+					</div>
+					<ul>
+						<li>Improve page load performance</li>						
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-lg-8 offset-lg-2">
+			<div class="card">
+				<div class="card-body">
+					<table id="user-table" class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Email</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+</div>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+
+	<script type="text/javascript">
+
+		
+		$(document).ready(function () {
+			$('#user-table').DataTable({
+				"serverSide": true,  // Enable server-side processing
+				"ajax": {
+					"url": "/Business/GetUsersByPaging", 
+					"type": "POST",
+					"dataType": "json",
+					"data": function (d) {
+						d.draw = d.draw || 1; // Add a default draw value if not present
+					}
+				},
+				"columns": [
+					{ "data": "firstName" }, 
+					{ "data": "email" }
+				]
+			});
+		});
+	</script>
+}
+
+

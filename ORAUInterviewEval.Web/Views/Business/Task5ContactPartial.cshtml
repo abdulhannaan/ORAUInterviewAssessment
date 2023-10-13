@@ -1,0 +1,29 @@
+﻿@using ORAUInterviewEval.Core.Interfaces
+@model ProfileModel
+@{
+	Guid newGuid = Guid.NewGuid();
+	Func<string, string> GenerateInputName = (x) => { return "Profile.Contacts[" + newGuid.ToString() + "]." + x; };
+}
+
+
+<div class="card mt-4">
+	<div class="card-header">
+		Contact
+	</div>
+	<div class="card-body">
+
+		<input type="hidden" name="Contacts.Index" value="@newGuid" />
+
+		<div class="form-group">
+			<label class="form-label" for="@GenerateInputName("Address")">Address</label>
+			<input class="form-control" aria-required="true" name="@GenerateInputName("Address")" />
+		</div>
+
+		<div class="form-group">
+			<label class="form-label" for="@GenerateInputName("City")">City</label>
+			<input class="form-control" aria-required="true" name="@GenerateInputName("City")" />
+		</div>
+
+
+	</div>
+</div>

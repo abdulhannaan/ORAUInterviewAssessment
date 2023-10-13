@@ -1,0 +1,106 @@
+﻿@model Task3ViewModel
+@using ORAUInterviewEval.Core.Interfaces
+@using ORAUInterviewEval.Infrastructure.ViewModels
+
+
+@inject ICacheService cacheService
+
+@{
+    ViewData["Title"] = "Task 3 - Save Comment";
+
+
+    var programOptions = new SelectList(cacheService.GetPrograms(), "Key", "Value");
+}
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2 mb-5">
+            <h1 class="border-bottom">@ViewData["Title"]</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h2>Requirements</h2>
+                    <p>
+                        When the "Save Comment" button is clicked save the comment without refreshing the page.
+                    </p>
+                    <ul>
+                        <li>Use AJAX to save the comment</li>
+                        <li>Show a javascript alert that says "Comment Saved." on success</li>
+                        <li>Show in red text below the comment field a validation message for: comment is required and must be under 100 characters on button click</li>
+                        <li>Save the comment to TaskService.SaveComment after validating server side the comment is not empty or over 100 characters</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-body">
+                    <form id="commentForm">
+                        <div class="form-group">
+                            <label asp-for="Comment" class="form-label"></label>
+                            <textarea asp-for="Comment" rows="6" required class="form-control" aria-required="true"></textarea>
+                            <div id="commentError" style="color: red;"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <button class="btn-primary btn btn btn-block my-2">Save</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Handle form submission
+            $("#commentForm").submit(function (event) {
+                var commentValue = $("#Comment").val();
+                var errorElement = $("#commentError");
+                 event.preventDefault();
+                // Validate comment
+                if ($.trim(commentValue) === "" || commentValue.length > 100) {
+                    errorElement.text("Comment is required and must be under 100 characters.").css("color", "red");
+                } else {
+                    errorElement.text("");
+                    SaveComment(commentValue);
+                }
+            });
+        });
+
+        // Function to save the comment via AJAX
+        function SaveComment(comment) {
+            $.ajax({
+                type: 'POST',
+                url: '/Business/Task3',
+                data: { comment: comment },
+                success: function (response) {
+                    if (response.status) {
+                        $("#Comment").val("");
+                    }
+                    alert(response.responseMessage);
+                },
+                error: function () {
+                    console.error('Error saving comment.');
+                }
+            });
+        }
+    </script>
+
+}

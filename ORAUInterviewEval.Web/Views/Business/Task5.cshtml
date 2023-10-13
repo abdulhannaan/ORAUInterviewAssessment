@@ -1,0 +1,102 @@
+﻿@model Task5ViewModel
+@using ORAUInterviewEval.Core.Interfaces
+@using ORAUInterviewEval.Infrastructure.ViewModels
+
+
+@inject ICacheService cacheService
+
+@{
+    ViewData["Title"] = "Task 5 - Debug the problem(s)";
+
+
+    var programOptions = new SelectList(cacheService.GetPrograms(), "Key", "Value");
+}
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2 mb-5">
+            <h1 class="border-bottom">@ViewData["Title"]</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h2>Requirements</h2>
+                    <p>
+                        Make sure the Profile saves correctly and all the fields save.
+                    </p>
+                    <ul>
+                        <li>The BusinessController.Task5 Action should be called when the Save button is clicked</li>
+                        <li>All fields should be sent to TaskService.SaveProfile()</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Task5" asp-controller="Business" method="post">
+
+                        <div class="form-group">
+                            <label for="Profile.FullName" class="form-label">Full Name</label>
+                            <input name="Profile.FullName" class="form-control" aria-required="true" />
+                            <span asp-validation-for="Profile.FullName" class="text-danger"></span>
+
+                        </div>
+
+
+                        <h3>Contacts</h3>
+                        <button type="button" id="add-contact-btn" class=" btn-primary btn">Add Contact</button>
+                        <div id="contacts-target" class="mt-2">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <button type="submit" class="btn-primary btn btn btn-block my-2">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var count = 0;
+            var CONTACT_PARTIAL_URL = '@Url.Action("Task5NewContactPartial")';
+
+            // Attach click event handler to the "Add Contact" button
+            $('#add-contact-btn').click(function () {
+                $.post(CONTACT_PARTIAL_URL, {}, function (result) {
+
+                    // Parse the returned result as HTML
+                    var htmlElement = $.parseHTML(result);
+
+                    // Extract the GUID (used for indexing in the form) from the partial view
+                    var guid = $(htmlElement).find('input[name="Contacts.Index"]').val();
+
+                    // Replace the GUID with the current count to ensure unique indexing
+                    var regex = new RegExp('\\[' + guid + '\\]', 'g');
+                    result = result.replace(regex, '[' + count.toString() + ']');
+
+                    // Append the modified partial view to the target element
+                    $('#contacts-target').append(result);
+
+                    // Increment the count for the next contact
+                    count = count + 1;
+                });
+            });
+
+        });
+
+    </script>
+}
