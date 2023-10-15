@@ -60,10 +60,7 @@
 				"ajax": {
 					"url": "/Business/GetUsersByPaging", 
 					"type": "POST",
-					"dataType": "json",
-					"data": function (d) {
-						d.draw = d.draw || 1; // Add a default draw value if not present
-					}
+					"dataType": "json"
 				},
 				"columns": [
 					{ "data": "firstName" }, 

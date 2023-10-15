@@ -1,10 +1,5 @@
 ﻿using ORAUInterviewEval.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ORAUInterviewEval.Core.Interfaces
 {
@@ -15,8 +10,7 @@ namespace ORAUInterviewEval.Core.Interfaces
         void SaveComment(string commentStr);
 
         void SaveProfile(ProfileModel profile);
-		List<ApplicationUser> GetUsers(int pageIndex, int pageSize);
-        int GetTotalUsersCount();
+        Task6ViewModel GetUsers(int pageIndex, int pageSize, string searchKeywords, string sortColumn, string sortColumnDirection);
 	}
 
     public class ProfileModel
@@ -35,5 +29,12 @@ namespace ORAUInterviewEval.Core.Interfaces
         public string City { get; set; }
 
     }
+
+	public class Task6ViewModel
+	{
+		public List<ApplicationUser> Users { get; set; }
+		public int Total { get; set; }
+
+	}
 
 }

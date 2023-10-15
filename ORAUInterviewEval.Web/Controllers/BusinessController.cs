@@ -96,26 +96,30 @@ namespace ORAUInterviewEval.Web.Controllers
         /// <param name="length">Number of records to retrieve.</param>
         /// <returns>A JSON response containing paginated user data for DataTables.</returns>
 
-        public IActionResult GetUsersByPaging(int draw, int start, int length)
-        {
-            var model = new Task6ViewModel();
+        public IActionResult GetUsersByPaging()
+       {
+            int start, length = 0;
 
-            // Calculate the page index based on start and length
-            int pageIndex = start / length + 1;
+			var draw = Request.Form["draw"].FirstOrDefault();
+			int.TryParse( Request.Form["start"].FirstOrDefault(), out start);
+			int.TryParse( Request.Form["length"].FirstOrDefault(), out length);
+			var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+			var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+			var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+			// Calculate the page index based on start and length
+			int pageIndex = start / length + 1;
 
             // Retrieve a paginated list of users
-            model.Users = _taskService.GetUsers(pageIndex, length);
-
-            // Get the total count of users (for pagination)
-            int totalRecords = _taskService.GetTotalUsersCount();
+            var task6Vm = _taskService.GetUsers(pageIndex, length, searchValue, sortColumn, sortColumnDirection);
 
             // Return JSON response with paginated user data for DataTables
             return Json(new
             {
                 draw = draw,
-                recordsTotal = totalRecords,
-                recordsFiltered = totalRecords,
-                data = model.Users
+                recordsTotal = task6Vm.Total,
+                recordsFiltered = task6Vm.Total,
+                data = task6Vm.Users
             });
         }
 
