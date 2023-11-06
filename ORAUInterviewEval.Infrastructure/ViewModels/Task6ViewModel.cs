@@ -1,6 +1,4 @@
-﻿using ORAUInterviewEval.Core.Models;
-
-namespace ORAUInterviewEval.Infrastructure.ViewModels
+﻿namespace ORAUInterviewEval.Infrastructure.ViewModels
 {
 
 

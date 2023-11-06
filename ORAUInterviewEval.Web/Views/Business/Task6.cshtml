@@ -63,7 +63,12 @@
 					"dataType": "json"
 				},
 				"columns": [
-					{ "data": "firstName" }, 
+					{
+						"data": null, 
+						"render": function (data) {
+							return data.firstName + ' ' + data.lastName;
+						}
+					},
 					{ "data": "email" }
 				]
 			});

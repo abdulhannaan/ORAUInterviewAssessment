@@ -2,7 +2,6 @@
 using ORAUInterviewEval.Core.Interfaces;
 using ORAUInterviewEval.Core.Models;
 using ORAUInterviewEval.Infrastructure.Data;
-using System;
 
 namespace ORAUInterviewEval.Infrastructure.Services
 {
